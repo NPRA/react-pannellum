@@ -1503,6 +1503,7 @@ var pannellum = (function (window, document, undefined$1) {
       autoRotateStopDelay: 0,
       type: "equirectangular",
       northOffset: 0,
+      displayAboutInformation: true,
       showFullscreenCtrl: true,
       dynamic: false,
       dynamicUpdate: false,
@@ -1517,6 +1518,7 @@ var pannellum = (function (window, document, undefined$1) {
       backgroundColor: [0, 0, 0],
       avoidShowingBackground: false,
       animationTimingFunction: timingFunction,
+      onScrollZoom: function onScrollZoom() {},
       draggable: true,
       disableKeyboardCtrl: false,
       crossOrigin: "anonymous",
@@ -1558,13 +1560,11 @@ var pannellum = (function (window, document, undefined$1) {
     container.appendChild(renderContainer);
     var dragFix = document.createElement("div");
     dragFix.className = "pnlm-dragfix";
-    uiContainer.appendChild(dragFix); // Display about information on right click
-
     var aboutMsg = document.createElement("span");
     aboutMsg.className = "pnlm-about-msg";
     aboutMsg.innerHTML = '<a href="https://pannellum.org/" target="_blank">Pannellum</a>';
     uiContainer.appendChild(aboutMsg);
-    dragFix.addEventListener("contextmenu", aboutMessage); // Create info display
+    uiContainer.appendChild(dragFix); // Create info display
 
     var infoDisplay = {}; // Hot spot debug indicator
 
@@ -1899,6 +1899,11 @@ var pannellum = (function (window, document, undefined$1) {
 
         if (config.doubleClickZoom) {
           dragFix.addEventListener("dblclick", onDocumentDoubleClick, false);
+        } // Display about message on right click
+
+
+        if (config.displayAboutInformation) {
+          dragFix.addEventListener("contextmenu", aboutMessage); // Create info display
         }
 
         container.addEventListener("mozfullscreenchange", onFullScreenChange, false);
@@ -2433,6 +2438,7 @@ var pannellum = (function (window, document, undefined$1) {
         speed.hfov = event.detail > 0 ? 1 : -1;
       }
 
+      config.onScrollZoom ? config.onScrollZoom() : null;
       animateInit();
     }
     /**
