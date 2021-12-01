@@ -75,6 +75,7 @@ export default (function (window, document, undefined) {
       avoidShowingBackground: false,
       animationTimingFunction: timingFunction,
       onScrollZoom: () => {},
+      onFullscreenToggle: function onFullscreenToggle() {},
       draggable: true,
       disableKeyboardCtrl: false,
       crossOrigin: "anonymous",
@@ -2467,7 +2468,12 @@ export default (function (window, document, undefined) {
         );
         fullscreenActive = false;
       }
-      if (resize !== "resize") fireEvent("fullscreenchange", fullscreenActive);
+      if (resize !== "resize") {
+        fireEvent("fullscreenchange", fullscreenActive)
+        if (config.onFullscreenToggle) {
+          config.onFullscreenToggle(fullscreenActive); //Fire custom callback
+        };
+      };
       // Resize renderer (deal with browser quirks and fixes #155)
       renderer.resize();
       setHfov(config.hfov);
